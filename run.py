@@ -1,6 +1,6 @@
-from spotify_client import SpotifyClient
 from dotenv import load_dotenv
 from pathlib import Path
+from spotify_client import SpotifyClient
 
 
 def run():
