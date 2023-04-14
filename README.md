@@ -1,4 +1,4 @@
-# Spotify Automation - PY
+# Spotify API Automation - PY
 
 Uses the Spotify for Developers - Web API.
 
