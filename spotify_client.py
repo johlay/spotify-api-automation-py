@@ -17,6 +17,29 @@ class SpotifyClient(object):
         self.spotify_access_token = ""
         self.spotify_authorization_token = ""
 
+    def get_spotify_access_token(self):
+        """Request an access token"""
+        scope = "playlist-modify-public playlist-modify-private"
+
+        request_body = {
+            "grant_type": "client_credentials",
+            "scope": scope
+        }
+        query = "https://accounts.spotify.com/api/token"
+
+        response = requests.post(
+            auth=HTTPBasicAuth(self.spotify_client_id,
+                               self.spotify_client_secret),
+            url=query,
+            data=request_body,
+            headers={"Content-Type": "application/x-www-form-urlencoded"}
+        )
+
+        response_json = response.json()
+        access_token = response_json["access_token"]
+
+        self.spotify_access_token = access_token
+
     def get_spotify_authorization_token(self):
         """Request User Authorization"""
 
@@ -24,7 +47,7 @@ class SpotifyClient(object):
             "client_id": self.spotify_client_id,
             "response_type": "code",
             "redirect_uri": "https://developer.spotify.com/",
-            "scope": "playlist-modify-public playlist-modify-private"
+            "scope": "playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative"
         }
 
         query = "https://accounts.spotify.com/authorize?" + \
@@ -58,28 +81,25 @@ class SpotifyClient(object):
 
         return response_auth_token.status_code
 
-    def get_spotify_access_token(self):
-        """Request an access token"""
-        scope = "playlist-modify-public playlist-modify-private"
+    def add_item_to_playlist(self, uri, playlist_id):
+        """Add item to playlist"""
 
-        request_body = {
-            "grant_type": "client_credentials",
-            "scope": scope
-        }
-        query = "https://accounts.spotify.com/api/token"
+        uris = {"uris": [uri]}
+
+        query = "https://api.spotify.com/v1/playlists/{}/tracks".format(
+            playlist_id)
+
+        request_body = json.dumps(uris)
 
         response = requests.post(
-            auth=HTTPBasicAuth(self.spotify_client_id,
-                               self.spotify_client_secret),
             url=query,
             data=request_body,
-            headers={"Content-Type": "application/x-www-form-urlencoded"}
-        )
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": "Bearer {}".format(self.spotify_authorization_token)
+            })
 
-        response_json = response.json()
-        access_token = response_json["access_token"]
-
-        self.spotify_access_token = access_token
+        return response.status_code
 
     def create_playlist(self, name, description=None, public=False):
         """Create a new playlist"""
