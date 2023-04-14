@@ -19,6 +19,7 @@ class SpotifyClient(object):
 
     def get_spotify_access_token(self):
         """Request an access token"""
+
         scope = "playlist-modify-public playlist-modify-private"
 
         request_body = {
@@ -42,7 +43,6 @@ class SpotifyClient(object):
 
     def get_spotify_authorization_token(self):
         """Request User Authorization"""
-
         query_parameters = {
             "client_id": self.spotify_client_id,
             "response_type": "code",
@@ -81,7 +81,7 @@ class SpotifyClient(object):
 
         return response_auth_token.status_code
 
-    def add_item_to_playlist(self, uri, playlist_id):
+    def add_item_to_playlist(self, uri: str, playlist_id: str):
         """Add item to playlist"""
 
         uris = {"uris": [uri]}
@@ -101,7 +101,7 @@ class SpotifyClient(object):
 
         return response.status_code
 
-    def create_playlist(self, name, description=None, public=False):
+    def create_playlist(self, name: str, description=None, public=False):
         """Create a new playlist"""
 
         request_body = json.dumps({
@@ -122,8 +122,9 @@ class SpotifyClient(object):
 
         return response.status_code
 
-    def search(self, search_text=None, type="artist"):
+    def search(self, search_text: str, type="artist"):
         """Search for item"""
+
         query = "https://api.spotify.com/v1/search?q={}&type={}".format(
             search_text, type)
 
