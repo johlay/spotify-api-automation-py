@@ -80,3 +80,41 @@ class SpotifyClient(object):
         access_token = response_json["access_token"]
 
         self.spotify_access_token = access_token
+
+    def create_playlist(self, name, description=None, public=False):
+        """Create a new playlist"""
+
+        request_body = json.dumps({
+            "name": name,
+            "description": description,
+            "public": public
+        })
+
+        response = requests.post(
+            url="https://api.spotify.com/v1/users/{}/playlists".format(
+                self.spotify_user_id),
+            data=request_body,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": "Bearer {}".format(self.spotify_authorization_token)
+            }
+        )
+
+        return response.status_code
+
+    def search(self, search_text=None, type="artist"):
+        """Search for item"""
+        query = "https://api.spotify.com/v1/search?q={}&type={}".format(
+            search_text, type)
+
+        response = requests.get(
+            url=query,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": "Bearer {}".format(self.spotify_access_token)
+            },
+        )
+
+        response_json = response.json()
+
+        return response_json
