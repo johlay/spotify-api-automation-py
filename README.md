@@ -1,6 +1,13 @@
 # Spotify API Automation - PY
 
-Uses the Spotify for Developers - Web API.
+A simple service that creates a music playlist, and add your item. Uses the Spotify for Developers - Web API.
+
+
+## Table of Contents
+* [Getting Started](#getting-started)
+* [Pre-requisites](#pre-requisites)
+* [Installing](#installing)
+* [Running the app](#running-the-app)
 
 ## Getting Started
 
@@ -8,17 +15,19 @@ For this project, you will need Python (v.3.10 or later) installed on your syste
 
 ### Pre-requisites
 
-Spotify Web API credentials are needed - please check .env.example file.
+[Spotify Web API] credentials are needed - please check .env.example file.
 
 ### Installing
 
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ## Running the app
 
 ```
-python run.py
+python3 run.py
 ```
 
+
+[Spotify Web API]: <https://developer.spotify.com/>
