@@ -5,6 +5,7 @@ import requests
 import six
 import urllib
 import webbrowser
+from exceptions import ResponseException
 from requests.auth import HTTPBasicAuth
 from urllib import parse
 
@@ -35,6 +36,10 @@ class SpotifyClient(object):
             data=request_body,
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
+
+        if response.status_code != 200:
+            raise ResponseException(
+                error_message="Error occurred while trying to retrieve access token", status_code=response.status_code)
 
         response_json = response.json()
         access_token = response_json["access_token"]
@@ -75,6 +80,10 @@ class SpotifyClient(object):
             json=True
         )
 
+        if response_auth_token.status_code != 200:
+            raise ResponseException(
+                error_message="Error occurred while trying to retrieve authorization token", status_code=response_auth_token.status_code)
+
         response_auth_token_json = response_auth_token.json()
 
         self.spotify_authorization_token = response_auth_token_json["access_token"]
@@ -99,6 +108,10 @@ class SpotifyClient(object):
                 "Authorization": "Bearer {}".format(self.spotify_authorization_token)
             })
 
+        if response.status_code != 200:
+            raise ResponseException(
+                error_message="Error occured while attempting to add item to playlist", status_code=response.status_code)
+
         return response.status_code
 
     def create_playlist(self, name: str, description=None, public=False):
@@ -120,6 +133,10 @@ class SpotifyClient(object):
             }
         )
 
+        if response.status_code != 200:
+            raise ResponseException(
+                error_message="Error while trying to create playlist", status_code=response.status_code)
+
         return response.status_code
 
     def search(self, search_text: str, type="artist"):
@@ -135,6 +152,10 @@ class SpotifyClient(object):
                 "Authorization": "Bearer {}".format(self.spotify_access_token)
             },
         )
+
+        if response.status_code != 200:
+            raise ResponseException(
+                error_message=response.reason, status_code=response.status_code)
 
         response_json = response.json()
 
